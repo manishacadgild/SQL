@@ -1,0 +1,542 @@
+--print a report of everything the customer_id
+--1.everything the customer_id 4 has ever purchased
+at the market
+--2:sorted by date
+--3:add total_amt columns as well for each purchases
+
+select*,
+(quantity*cost_to_customer_per_qty) as total_amt
+ from `farmers_market.customer_purchases`
+ where customer_id=4
+ order by market_date;
+ 
+ --Get all the product info for products with id
+ --between 3 and 8(not inclusive) and of products
+ with id 10.
+ select *,
+ from `farmers_market.product`
+ where (product_id>3 and product_id<8) or (product_id=10);
+
+ select *,
+ from `farmers_market.product`
+ where (product_id between 3 and 8) or (product_id=10); --included 3 and 8 in between
+ 
+ select employee_id, first_name, last_name, salary 
+from employees 
+where commission_pct is null and 
+salary between 5000 and 10000 and 
+department_id in (50,10,80);
+
+Problem Description:
+
+Find the details of the employees who are working in the departments 'Administration', 'Marketing', and 'Human Resources'.
+
+Return the columns 'employee_id', 'full_name'(first and last name separated by space), and 'salary'.
+Return the result ordered by employee_id in ascending order.
+
+select 
+employee_id,
+concat(first_name," ",last_name) as full_name,
+salary from 
+employees 
+where department_id in 
+(select department_id
+from departments where
+department_name in ('Administration', 'Marketing', 'Human Resources'));
+
+join same query  answers
+select 
+e.employee_id,
+CONCAT(e.FIRST_NAME, ' ', e.LAST_NAME) As full_name,
+e.salary
+from employees e 
+inner join departments d on
+e.department_id=d.department_id
+where d.department_name in ('Administration','Marketing','Human Resources');
+
+ ==================
+ Problem Statement:
+
+Based on the employee's salary, divide the employees into three different classes.
+
+Salary greater than 20,000 (i.e, excluding 20,000) as 'Class A'
+Salary between 10,000 to 20,000 (i.e, including both 10,000 and 20,000) as 'Class B'
+Salary less than 10,000 (i.e, excluding 10,000) as 'Class C'. Return the new column as 'Salary_bin'.
+Return the columns 'employee_id', 'salary', and 'Salary_bin'.
+Return the result ordered by employee_id in ascending order.
+
+select employee_id, salary, 
+case 
+when salary > 20000 then 'Class A' 
+when salary <=20000 and salary >=10000 then 'Class B' 
+when salary < 10000 then 'Class C' 
+end as Salary_bin from employees
+order by employee_id;
+
+================
+Problem Statement:
+
+Using the employees table, create a new column as 'Accountant'.
+
+If the employees are working at the 'FI_ACCOUNT' or 'AC_ACCOUNT' designation then label it as 1, else label all other designations as 0.
+
+Return the columns 'employee_id', 'first_name', 'last_name', 'salary', 'Accountant'.
+Return the output ordered by employee_id in ascending order.
+
+SELECT 
+ employee_id, first_name, last_name, salary, 
+CASE 
+ WHEN job_id IN ('AC_ACCOUNT', 'FI_ACCOUNT') THEN 1 
+ ELSE 0 
+END AS 'Accountant' 
+FROM employees
+ORDER BY employee_id;
+
+=================
+Problem Statement:
+
+Write a query to calculate the bonus of each employee. The bonus of an employee is 100% of
+ their salary if the ID of the employee is an odd number and the employee name does 
+ not start with the character 'M'. The bonus of an employee is 0 otherwise.
+
+Return the result table ordered by employee_id in ascending manner.
+
+SELECT employee_id,
+CASE WHEN employee_id % 2 <>0 AND 
+name NOT LIKE 'M%' THEN salary
+ELSE 0
+END AS bonus
+FROM employees
+ORDER BY employee_id;
+
+====================
+Problem Statement:
+Find the details of all those employees who work in the 'Human Resources' department.
+Return the columns 'employee_id', 'department_id', 'first_name', 'last_name', 'job_id', and 'department_name'.
+Return the result ordered by employee_id in ascending order.
+select 
+ e.employee_id,
+ e.department_id,
+ e.first_name, 
+ e.last_name, 
+ e.job_id, 
+ d.department_name 
+ from employees e
+ inner join departments d
+ on e.department_id = d.department_id
+ where  d.department_name ='Human Resources' ;
+ 
+============================
+ Problem Statement:
+
+Display the details of all those departments that don't have any working employees.
+Return the columns 'department_id', and 'department_name'.
+Return the result ordered by department_id in ascending order.
+
+select d.department_id, d.department_name 
+from departments d 
+left join employees e 
+on d.department_id = e.department_id 
+WHERE e.department_id is null
+order by d.department_id;
+=================================
+Problem Statement:
+
+Write a SQL query to find the employee details who handles no customers.
+
+Note:
+
+Use the given customers table.
+Return the output ordered by employeeNumber in ascending order.
+The salesRepEmployeeNumber column to the employeeNumber who made sales to the customers.
+ SELECT E.employeeNumber, E.firstName, E.lastName
+FROM customers C
+RIGHT JOIN employees E 
+ON C.salesRepEmployeeNumber = E.employeeNumber
+WHERE C.customerNumber is NULL
+ORDER BY E.employeeNumber;
+
+
+
+=======
+ --Find the booth assignment for vendor_id 7 for 
+ --all dates between April 3,2019 and May 16,2019 
+ --including --the 2 dates
+ 
+select *,
+from `farmers_market.vendor_booth_assignments`
+where vendor_id=7 
+and (market_date >='2019-04-03' and market_date<='2019-05-16')
+order by market_date;
+
+---Return a list of customers with the following lastName--
+name [a,y,z]
+ 
+
+select emp_name from employee order by name limit=10;
+select original_title, tagline, director from movies 
+order by popularity desc limit 5;
+Write a query to find all the details of the movie that has the third-highest revenue.
+select * from movies 
+order by revenue desc 
+limit 1 offset 2;
+
+SELECT country, gold_medals, silver_medals, bronze_medals
+FROM olympic
+ORDER BY 
+gold_medals DESC,
+silver_medals DESC,
+bronze_medals DESC,
+country ASC;
+===========
+select 
+ original_title, 
+ round((vote_count/(vote_count+104.0)*vote_average)+(104.0/(104.0+vote_count)*5.97),2) as 'Weighted_avg_rating' 
+from movies 
+order by Weighted_avg_rating desc, original_title asc  
+limit 10;
+
+SELECT 
+ (CONCAT(original_title,'-',tagline)) AS 'Title' 
+FROM movies;
+
+SELECT 
+ person_id,
+ CONCAT(name,'(',SUBSTRING(profession, 1, 1),')') as 'name'
+FROM person
+ORDER BY person_id DESC;
+
+select original_title from movies 
+where release_year > 2014 and vote_average > 7
+order by original_title;
+
+select original_title, popularity from movies 
+where genres='Horror' order by popularity desc;
+
+
+select orderNumber, requiredDate 
+from orders
+where orderDate 
+between '2003-12-01' and '2003-12-31'
+and status = 'Shipped'
+order by orderNumber;
+
+select * from employees
+where last_name in ('King','Taylor','Grant')
+order by employee_id;
+
+SELECT 
+ original_title, 
+ director, 
+ genres, cast, budget, revenue, runtime, vote_average 
+FROM movies 
+WHERE
+ keywords LIKE '%sport%' OR 
+ keywords LIKE '%sequel%' OR 
+ keywords LIKE '%suspense%'
+ORDER BY original_title;
+
+select emp_id,name,salary , round(((salary * 20)/100)+salary)as New_salary
+from employees
+order by emp_id;
+
+select concat("Book Name:",book_name,",", "Author:", author,",", "Book price:", book_price) as "Book_Description" 
+from books
+order by Book_Description;
+
+select employee_number,
+concat(concat(upper(SUBSTR(first_name,1,1)), lower(SUBSTR(first_name,2))),' ', lower(last_name)) as "Full Name"
+from employees
+order by employee_number;
+
+What if we want to add 1 for vendors who sell fresh products and 0 those
+who don’t?
+SELECT
+vendor_id,
+vendor_name,
+vendor_type,
+CASE
+ WHEN LOWER(vendor_type) LIKE "%fresh%"
+ THEN 1
+ ELSE 0
+END AS if_fresh
+FROM `farmers_market.vendor`;
+
+Using IF()
+SELECT
+vendor_id,
+vendor_name,
+vendor_type,
+IF(lower(vendor_type) LIKE "%fresh%", 1,
+0) AS if_fresh
+FROM `farmers_market.vendor`;
+
+
+Display the details of the employees who work in 
+departments 50,10, or 80 and whose salary is between 5000 to 10000 and 
+also where employees have no commission_pct(commission percentage).
+
+select employee_id, first_name, last_name, salary 
+from employees 
+where commission_pct is null and 
+salary between 5000 and 10000 and 
+department_id in (50,10,80);
+
+select 
+e.employee_id,
+CONCAT(e.FIRST_NAME, ' ', e.LAST_NAME) As full_name,
+e.salary
+from employees e 
+inner join departments d on
+e.department_id=d.department_id
+where d.department_name in ('Administration','Marketing','Human Resources');
+
+---------------------------------------
+Problem Statement:
+
+Display all the details of the employees who did not work at any job in the past.
+
+Return all the columns from the employee's table.
+
+
+
+
+Return the columns 'employee_id', 'first_name', 'last_name', 'salary'.
+Use the employees table.
+
+STEP 1: Select employee_id and salary from the employee’s table.
+
+select employee_id, salary from employees;
+
+STEP 2: Based on the salary column divide the employees into three different categories as specified using the CASE function.
+
+Salary greater than 20,000 as 'Class A'
+Salary between 10,000 to 20,000 as 'Class B'
+Salary less than 10,000 as 'Class C'.
+End the condition as ‘Salary_bin’ which creates a new column as ‘Salary_bin’.
+
+select employee_id, salary, 
+case 
+when salary > 20000 then 'Class A' 
+when salary <=20000 and salary >=10000 then 'Class B' 
+when salary < 10000 then 'Class C' 
+end as Salary_bin from employees
+order by employee_id;
+
+Find out purchases made at the market on days when it rained.
+SELECT
+*
+FROM `farmers_market.customer_purchases`
+WHERE market_date IN (
+SELECT
+ market_date
+FROM `farmers_market.mdi`
+WHERE market_rain_flag = 1)
+
+
+List down all the product details where product_category_name contains
+fresh in it.
+SELECT *
+FROM `farmers_market.product`
+WHERE product_category_id IN (
+SELECT product_category_id
+FROM `farmers_market.product_category`
+WHERE lower(product_category_name) LIKE "%fresh%"
+)
+
+List all the products along with their product_category names.
+SELECT
+p.product_id,
+p.product_name,
+pc.product_category_id,
+pc.product_category_name
+FROM `farmers_market.product` AS p
+LEFT JOIN `farmers_market.product_category` AS pc
+ON p.product_category_id = pc.product_category_id;
+
+Find out all the customers who have not ordered anything yet.
+SELECT
+c.customer_id
+FROM `farmers_market.customer` AS c
+LEFT JOIN `farmers_market.customer_purchases` AS cp
+ON c.customer_id = cp.customer_id
+WHERE cp.customer_id IS NULL
+
+=================
+--Get a list of customers zip codes
+--for customers who made a purchases
+--on 2019-04-06
+--distinct fot fine the unique codes
+
+select 
+distinct 
+c.customer_zip,
+from `farmers_market.customer` as c
+join `farmers_market.customer_purchases` as cp on
+c.customer_id=cp.customer_id
+where cp.market_date='2019-04-06';
+
+Q-- List all the product along with there product categories names
+
+select p.product_id,p.product_name,pc.product_category_name from `farmers_market.product` as p
+ left join `farmers_market.product_category` as pc
+on p.product_id=pc.product_category_id;
+
+Q--List all the customers and there associated purchases?
+
+select distinct c.customer_first_name,cp.quantity 
+from
+`farmers_market.customer` as c
+left join `farmers_market.customer_purchases` cp
+on c.customer_id=cp.customer_id;
+Q-- Let's say we want details about all the 
+--farmers_market booths(even if not assigned)
+--and every vender booth assigned for every market data
+--with the deatils of the venders
+
+SELECT
+  b.booth_number,
+  b.booth_type,
+  vba.vendor_id,
+  vba.market_date,
+  v.vendor_id,
+  v.vendor_name,
+  v.vendor_owner_first_name
+FROM
+  `farmers_market.booth` b
+LEFT JOIN
+  `farmers_market.vendor_booth_assignments` vba
+ON
+  b.booth_number=vba.booth_number
+LEFT JOIN  `farmers_market.vendor` v
+ON
+v.vendor_id=vba.vendor_id
+
+
+ select E.employeeNumber, E.firstName, and E.lastName 
+ from employee E
+ right join customers C on
+ C.salesRepEmployeeNumber = E.employeeNumber
+ WHERE C.customerNumber is NULL
+ ORDER BY E.employeeNumber
+ 
+ SELECT E.employeeNumber, E.firstName, E.lastName
+FROM customers C
+RIGHT JOIN employees E 
+ON C.salesRepEmployeeNumber = E.employeeNumber
+WHERE C.customerNumber is NULL
+ORDER BY E.employeeNumber;
+
+SELECT employee_id, IFNULL(commission_pct,0) as 'commission_pct'
+FROM employees
+ORDER BY employee_id;
+
+SELECT 
+ employee_id, first_name, last_name, salary, 
+CASE 
+ WHEN job_id IN ('AC_ACCOUNT', 'FI_ACCOUNT') THEN 1 
+ ELSE 0 
+END AS 'Accountant' 
+FROM employees
+ORDER BY employee_id;
+
+SELECT employee_id,
+CASE WHEN employee_id % 2 <>0 AND 
+name NOT LIKE 'M%' THEN salary
+ELSE 0
+END AS bonus
+FROM employees
+ORDER BY employee_id;
+ 
+ 
+ select 
+ e.employee_id,
+ e.department_id,
+ e.first_name, 
+ e.last_name, 
+ e.job_id, 
+ d.department_name 
+ from employees e
+ inner join departments d
+ on e.department_id = d.department_id
+ where  d.department_name ='Human Resources' ;
+ 
+ select product_name, year, and price
+ for each sale_id in the
+ 
+select d.department_id, d.department_name 
+from departments d 
+left join employees e 
+on d.department_id = e.department_id 
+WHERE e.department_id is null
+order by d.department_id;
+
+SELECT DISTINCT(city)
+FROM station
+WHERE SUBSTR(city, 1, 1) IN ('A', 'E' , 'I', 'O', 'U')
+ORDER BY city;
+
+===========
+windows functions
+
+--Rank the produt in the inventory for each vendor the costliest get the lowest rank.
+select *,
+row_number() over(partition by vendor_id order by original_price desc ) as row_rank_number
+from
+`farmers_market.vendor_inventory`;
+
+select *,
+row_number() over(partition by vendor_id order by original_price desc ) as row_rank_number,
+rank() over(partition by vendor_id order by original_price desc ) as rank_num_ranking,
+dense_rank() over(partition by vendor_id order by original_price desc ) as dense_rank_ranking,
+from
+`farmers_market.vendor_inventory`;
+
+
+-- Give me all the product per vendor that have a price rank 1
+
+select * from 
+(
+    select *,
+    dense_rank() over(partition by vendor_id order by original_price desc ) as dense_rank_ranking,
+    from
+    `farmers_market.vendor_inventory`
+) X
+
+where dense_rank_ranking=1;
+
+
+ --As a farmers_market, you want to figure out which of your products were above the average price on each market date.
+
+select * from  
+(select market_date,vendor_id,original_price,
+ avg(original_price) over(partition by market_date ) as avg_price
+ from `farmers_market.vendor_inventory`)X
+ where X.original_price>X.avg_price
+ 
+ ---
+ 
+ What if we want to add 1 for vendors who sell fresh products and 0 those
+who don’t?
+
+
+
+Count the number of purchases
+each customer made per market date.
+
+
+--Filter out vendors who brought at least 100 items from the farmer’s
+--market over the period - 2019-05-02 and 2022-05-16.
+
+select x.vendor_id,x.count_product
+from
+(select vendor_id,count(product_id) as count_product from `farmers_market.vendor_inventory`
+where market_date between '2019-05-02' and '2022-05-16'
+group by vendor_id) as x
+where x.count_product>100;
+
+--another way to same output query::::
+select vendor_id,count(product_id) as count_product from `farmers_market.vendor_inventory`
+where market_date between '2019-05-02' and '2022-05-16'
+group by vendor_id
+having count_product>100;
